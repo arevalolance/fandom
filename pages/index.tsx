@@ -3,15 +3,19 @@ import Layout from "@/components/layout";
 import Balancer from "react-wrap-balancer";
 import { AnimatePresence, motion } from "framer-motion";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "@/lib/constants";
-import { Github, Twitter } from "@/components/shared/icons";
+import { Github, LoadingDots, Twitter } from "@/components/shared/icons";
 import PlaylistMaker from "@/components/home/playlist-maker";
 import { useState } from "react";
 import { PromptResult } from "@/lib/types";
 import SongCard from "@/components/home/song";
+import { signIn, useSession } from "next-auth/react";
+import Spotify from "@/components/shared/icons/spotify";
 
 export default function Home() {
   const [promptResults, setPrompResults] = useState<PromptResult[]>([]);
   const [isLoading, setLoading] = useState(false);
+  const { data: session } = useSession();
+  const [signInClicked, setSignInClicked] = useState(false);
 
   return (
     <Layout>
@@ -72,23 +76,55 @@ export default function Home() {
       </motion.div>
       {/* here we are animating with Tailwind instead of Framer Motion because Framer Motion messes up the z-index for child components */}
       <div className="my-10 w-11/12 animate-[slide-down-fade_0.5s_ease-in-out] bg-red-200 md:w-[768px]">
-        <Card
-          title={
-            isLoading ? "Finding your songs..." : "Create your own Playlist"
-          }
-          description={
-            isLoading
-              ? "Wait a moment while we find you the perfect list of songs"
-              : "Create a playlist from your favorite books, movies, and TV shows"
-          }
-          demo={
-            <PlaylistMaker
-              setLoading={setLoading}
-              isLoading={isLoading}
-              setPromptResults={setPrompResults}
-            />
-          }
-        />
+        {!session ? (
+          <Card
+            title={"Login to Spotify"}
+            description={
+              "We need to login to Spotify to access songs from their library"
+            }
+            demo={
+              <button
+                disabled={signInClicked}
+                className={`${
+                  signInClicked
+                    ? "cursor-not-allowed border-gray-200 bg-gray-100"
+                    : "border border-gray-200 bg-white text-black hover:bg-gray-50"
+                } flex h-10 w-[200px] items-center justify-center space-x-3 rounded-md border text-sm shadow-sm transition-all duration-75 focus:outline-none`}
+                onClick={() => {
+                  setSignInClicked(true);
+                  signIn("spotify");
+                }}
+              >
+                {signInClicked ? (
+                  <LoadingDots color="#808080" />
+                ) : (
+                  <>
+                    <Spotify className="text-[20px]" />
+                    <p>Sign In with Spotify</p>
+                  </>
+                )}
+              </button>
+            }
+          />
+        ) : (
+          <Card
+            title={
+              isLoading ? "Finding your songs..." : "Create your own Playlist"
+            }
+            description={
+              isLoading
+                ? "Wait a moment while we find you the perfect list of songs"
+                : "Create a playlist from your favorite books, movies, and TV shows"
+            }
+            demo={
+              <PlaylistMaker
+                setLoading={setLoading}
+                isLoading={isLoading}
+                setPromptResults={setPrompResults}
+              />
+            }
+          />
+        )}
       </div>
 
       {!isLoading && promptResults.length > 0 ? (

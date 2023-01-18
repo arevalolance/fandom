@@ -9,6 +9,7 @@ import {
 } from "react";
 import { LoadingDots } from "@/components/shared/icons";
 import Image from "next/image";
+import Spotify from "../shared/icons/spotify";
 
 const SignInModal = ({
   showSignInModal,
@@ -56,6 +57,7 @@ const SignInModal = ({
               <LoadingDots color="#808080" />
             ) : (
               <>
+                <Spotify className="text-[20px]" />
                 <p>Sign In with Spotify</p>
               </>
             )}

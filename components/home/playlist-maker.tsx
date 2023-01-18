@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Popover from "../shared/popover";
 import PopoverItem from "../shared/popover-item";
 import { PromptResult } from "../../lib/types";
+import { useSession } from "next-auth/react";
 
 const PlaylistMaker = ({
   setPromptResults,
@@ -40,7 +41,6 @@ const PlaylistMaker = ({
 
     // This data is a ReadableStream
     const data = response.body;
-    console.log(data);
     if (!data) {
       return;
     }
@@ -102,12 +102,10 @@ const PlaylistMaker = ({
   useEffect(() => {
     if (!isLoading) {
       const songs: PromptResult[] = [];
-      console.log(generatedText);
       const results = generatedText
         .split(/(\d+\.)/)
         .filter(Boolean)
         .filter((_, i) => i % 2 === 0);
-      console.log("results", results);
       results.splice(0, 1); // hack for now to remove first element "\n\n"
       results.forEach((item) => {
         let data = item.split(/(: | - )/);
@@ -126,22 +124,24 @@ const PlaylistMaker = ({
   }, [generatedText, isLoading, setPromptResults]);
 
   return (
-    <div className="flex w-10/12 flex-col items-center gap-x-2 gap-y-2 md:flex-row">
-      <input
-        onChange={(e) => setSearch(e.target.value)}
-        className="h-[42px] w-full rounded-md border-[1px] border-gray-300 py-1 px-2 focus:border-none"
-        required
-        placeholder="It Starts With Us"
-        maxLength={35}
-      />
+    <div className="flex w-10/12 flex-col items-center gap-y-4 md:flex-row">
+      <div className="flex w-full flex-col items-center gap-x-2 gap-y-2 md:flex-row">
+        <input
+          onChange={(e) => setSearch(e.target.value)}
+          className="h-[42px] w-full rounded-md border-[1px] border-gray-300 py-1 px-2 focus:border-none"
+          required
+          placeholder="It Starts With Us"
+          maxLength={35}
+        />
 
-      <button
-        onClick={(e) => generate(e)}
-        disabled={isLoading}
-        className="w-full rounded-md bg-blue-500 px-4 py-2 text-white drop-shadow-md hover:bg-blue-600 active:bg-blue-700 disabled:bg-gray-400 md:w-fit"
-      >
-        {isLoading ? "Generating..." : "Generate"}
-      </button>
+        <button
+          onClick={(e) => generate(e)}
+          disabled={isLoading}
+          className="w-full rounded-md bg-blue-500 px-4 py-2 text-white drop-shadow-md hover:bg-blue-600 active:bg-blue-700 disabled:bg-gray-400 md:w-fit"
+        >
+          {isLoading ? "Generating..." : "Generate"}
+        </button>
+      </div>
     </div>
   );
 };
