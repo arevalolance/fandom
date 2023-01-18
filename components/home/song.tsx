@@ -45,7 +45,7 @@ const SongCard = ({ res }: { res: PromptResult }) => {
 
   return (
     <AnimatePresence>
-      <div className="flex w-full flex-col-reverse  items-center justify-between gap-y-4 rounded-lg bg-white p-8 drop-shadow-md sm:flex-row">
+      <div className="flex h-fit w-full  flex-col-reverse items-center justify-between gap-y-4 rounded-lg bg-white p-8 drop-shadow-md sm:flex-row">
         <div className="flex w-8/12 flex-col items-center sm:items-start">
           <Balancer className="bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent md:text-2xl md:font-normal">
             {res.song}
@@ -59,7 +59,7 @@ const SongCard = ({ res }: { res: PromptResult }) => {
         </div>
         {song ? (
           <motion.div
-            className="relative h-[150px] w-[150px]"
+            className="relative h-fit w-[150px]"
             variants={FADE_UP_ANIMATION_VARIANTS}
           >
             <Image

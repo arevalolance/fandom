@@ -13,8 +13,6 @@ const PlaylistMaker = ({
   isLoading: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [openPopover, setOpenPopover] = useState(false);
-  const [item, setItem] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const [generatedText, setGeneratedText] = useState<string>("");
 
@@ -23,6 +21,7 @@ const PlaylistMaker = ({
   const generate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setSearch("");
+    setPromptResults([]);
     setLoading(true);
 
     const response = await fetch(`/api/generate`, {
@@ -41,6 +40,7 @@ const PlaylistMaker = ({
 
     // This data is a ReadableStream
     const data = response.body;
+    console.log(data);
     if (!data) {
       return;
     }
@@ -102,10 +102,12 @@ const PlaylistMaker = ({
   useEffect(() => {
     if (!isLoading) {
       const songs: PromptResult[] = [];
+      console.log(generatedText);
       const results = generatedText
         .split(/(\d+\.)/)
         .filter(Boolean)
-        .filter((_, i) => i % 2 !== 0);
+        .filter((_, i) => i % 2 === 0);
+      console.log("results", results);
       results.splice(0, 1); // hack for now to remove first element "\n\n"
       results.forEach((item) => {
         let data = item.split(/(: | - )/);
