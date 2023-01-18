@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+audio::-webkit-meter-bar {
+  display: none;
+}
+
+audio::media-controls-panel {
+  display: none;
+}
