@@ -21,12 +21,20 @@ export default function Meta({
       <meta property="og:logo" content={`${DOMAIN}/logo.png`}></meta>
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
+      <meta
+        property="og:image"
+        content="https://fandom-rho.vercel.app/screenshot.png"
+      />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@vercel" />
       <meta name="twitter:creator" content="@arevalolance" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
+      <meta
+        property="og:image"
+        content="https://fandom-rho.vercel.app/screenshot.png"
+      />
     </Head>
   );
 }
